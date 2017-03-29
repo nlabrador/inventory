@@ -130,7 +130,7 @@ class Inventory extends Controller
                     $value  = $request->request->get($key);
                     $field  = $fields[$index][0];
 
-                    if ($field->type == 'date') {
+                    if ($value && $field->type == 'date') {
                         $value = date_create_from_format('Y-m-d', $value);
                     }
 
