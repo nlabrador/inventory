@@ -38,7 +38,9 @@
                             <i class="material-icons">arrow_back</i>
                         </button>
                     {% endif %}
-                    <button id="inventory-list" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">INVENTORIES</button>
+                    {% if app.session.get('inventories') %}
+                        <button id="inventory-list" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">INVENTORIES</button>
+                    {% endif %}
 
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="inventory-list">

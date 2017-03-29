@@ -33,39 +33,44 @@ class Inventory extends Controller
 
         if ($auth->checkPermission('can_view')) {
             $class = ucfirst($this->get('session')->get('inventory'));
-            
-            $inventories = $this->getDoctrine()
+           
+            if ($class) {
+                $inventories = $this->getDoctrine()
                                 ->getRepository('AppBundle:'.$class)
                                 ->findAll();
 
-            $result = [];
-            $dyobject = new DyObject($this->getDoctrine());
+                $result = [];
+                $dyobject = new DyObject($this->getDoctrine());
 
-            foreach ($inventories as $inventory) {
-                $getters = [];
-                foreach ($dyobject->displayGetters($inventory) as $getter) {
-                    $value = $inventory->$getter();
+                foreach ($inventories as $inventory) {
+                    $getters = [];
+                    foreach ($dyobject->displayGetters($inventory) as $getter) {
+                        $value = $inventory->$getter();
 
-                    if ($value instanceof \DateTime) {
-                        $getters[] = $value->format('Y-m-d');
+                        if ($value instanceof \DateTime) {
+                            $getters[] = $value->format('Y-m-d');
+                        }
+                        else {
+                            $getters[] = $value;
+                        }
                     }
-                    else {
-                        $getters[] = $value;
-                    }
+
+                    $get_id = $dyobject->getId($inventory);
+                    $result[$inventory->$get_id()] = $getters;
                 }
-
-                $get_id = $dyobject->getId($inventory);
-                $result[$inventory->$get_id()] = $getters;
-            }
             
-            $headers = isset($inventories[0]) ? $dyobject->displayHeaders($inventories[0]) : [];
-            return $this->render('inventory/index.html.twig', [
-                'user' => $user,
-                'auth' => $auth,
-                'inventories' => $result,
-                'headers'     => $headers,
-                'nosort'      => count($headers)
-            ]);
+                $headers = isset($inventories[0]) ? $dyobject->displayHeaders($inventories[0]) : [];
+                return $this->render('inventory/index.html.twig', [
+                    'user' => $user,
+                    'auth' => $auth,
+                    'inventories' => $result,
+                    'headers'     => $headers,
+                    'nosort'      => count($headers)
+                ]);
+            }
+            else {
+                return $this->redirectToRoute("setup");
+            }
         }
         else {
             return $this->redirectToRoute("index");
