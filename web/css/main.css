@@ -1,0 +1,40 @@
+body {
+    color: #424242;
+    font-size: 14px !important;
+}
+
+#user-list td {
+    font-size: 16px !important;
+}
+
+#user-list th {
+    font-size: 16px !important;
+}
+
+.inventory-header {
+  overflow: visible;
+}
+
+.mdl-layout__header-row {
+  padding: 0 25px 0 25px !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.logo-header {
+    cursor: pointer;
+}
+
+.inventory-footer {
+    margin-top: 290px;
+}
+
+.marginleft15 {
+    margin-left: 15px;
+}
+
+.confirm {
+    background-color: rgb(233,30,99) !important;
+}

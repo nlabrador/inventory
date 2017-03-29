@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block javascript %}
+    $(document).ready(function() {
+        {% for permission in permissions %}
+            $( "#user_management_{{ permission.getPermission.getPermission }}" ).attr('checked', 'checked');
+        {% endfor %}
+    });
+{% endblock %}
+
+{% block body %}
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--3-col"></div>
+    <div class="mdl-cell mdl-cell--6-col">
+        <h4>{{ edit_user.getName }} - User Permissions</h4>
+            <form action="{{ path('user', { id : edit_user.getUserId }) }}" method="POST">
+                <table class="mdl-data-table mdl-shadow--2dp table table-list" width="100%">
+                {% for row in form %}
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">
+                            {% if row.vars.id != 'user_management__token' %}
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="{{ row.vars.id }}">
+                                    <span class="mdl-switch__label">{{ form_label(row) }}</span>
+                                    {{ form_widget(row) }}
+                                </label>
+                            {% else %}
+                                {{ form_widget(row) }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+                <br>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit">Update Permissions</button>
+            </form>
+    </div>
+    <div class="mdl-cell mdl-cell--3-col"></div>
+</div>
+{% endblock %}

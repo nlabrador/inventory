@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block css %}
+    <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascriptfile %}
+    <script src="{{ asset('js/dataTables.material.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('js/setup.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+            <h4>Create New Inventory</h4>
+            <form action="javascript:void(0)">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="table_name">
+                    <label class="mdl-textfield__label" for="sample3">Inventory Name (Ex. Electronic Items)</label>
+                </div><br>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="field_name">
+                                <label class="mdl-textfield__label" for="sample3">Field name (Ex. brand_name)</label>
+                            </div>
+                        </td>
+                        <td>
+                            <select id="field_type">
+                                <option value="">-- Field Type --</option>
+                                <option value="text">Text</option>
+                                <option value="decimal">Decimal</option>
+                                <option value="integer">Integer</option>
+                                <option value="date">Date</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button id="add_field" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin-left: 15px;">
+                                ADD FIELD
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <h4>
+                Sample View - <span id="table_name_display"></span>
+                <button style="display:none; margin-left:25px;" id="save_inventory" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin-left: 15px;">
+                    SAVE INVENTORY
+                </button>
+            </h4>
+            <table id="item-list" class="mdl-data-table mdl-shadow--2dp" width="100%" cellspacing="0">
+            <thead>
+                <tr class="tr-head">
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="tr-body">
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block css %}
+    <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/datepicker/datepicker3.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascriptfile %}
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+{% endblock %}
+
+{% block javascript %}
+    $(document).ready(function() {
+        $('.datefield').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+
+        $('.datefield').on('click', function() {
+        });
+    });
+{% endblock %}
+
+{% block body %}
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--3-col"></div>
+    <div class="mdl-cell mdl-cell--6-col">
+    <h4>Add New Item</h4>
+        {% if errors %}
+        <div class="alert alert-danger">
+            <h4>Form submitted has the following errors:</h4>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+            <div class="box box-default">
+                <form action="{{ action }}" method="POST" name="create_inventory">
+                    <div class="box-body">
+                        <table class="table">
+                            {% for row in form %}
+                                {% if row.vars.id matches '/token/' %}
+                                    {{ form_widget(row) }}
+                                {% else %}
+                                    <tr>
+                                        <td>
+                                            {% if row.vars.attr.class matches '/input/' %}
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                    <input class="mdl-textfield__input {{ row.vars.attr.class }}" type="text" name="{{ row.vars.id }}">
+                                                    <label class="mdl-textfield__label">{{ row.vars.attr.placeholder }}</label>
+                                                </div>
+                                            {% else %}
+                                                {{ form_widget(row) }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="box-footer pull-right" style="padding-top: 25px;">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit">Save Item</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+    <div class="mdl-cell mdl-cell--3-col"></div>
+</div>
+{% endblock %}

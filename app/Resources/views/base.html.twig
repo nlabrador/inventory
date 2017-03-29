@@ -1,13 +1,160 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>inventory</title>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <!-- Page styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ asset('css/material.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sweetalert.css') }}">
+
+    {% block css %}{% endblock %}
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+      <div class="inventory-header mdl-layout__header mdl-layout__header--waterfall">
+        <div class="mdl-layout__header-row">
+          <h4 class="logo-header"><i class="material-icons">assignment</i> <strong>inventorianne</strong>
+            {% if user is defined %}
+                {% if app.session.get('inventory')  %}
+                    {{ app.session.get('inventory') }}
+                {% endif %}
+            {% endif %}
+          </h4>
+          <!-- Add spacer, to align navigation to the right in desktop -->
+          <div class="inventory-header-spacer mdl-layout-spacer"></div>
+          <!-- Navigation -->
+          <div class="inventory-navigation-container">
+            <nav class="inventory-navigation mdl-navigation">
+                {% if user is defined %}
+                    {%  if app.request.attributes.get('_route') != 'inventory' %}
+                        <button id="back" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                            <i class="material-icons">arrow_back</i>
+                        </button>
+                    {% endif %}
+                    <button id="inventory-list" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">INVENTORIES</button>
+
+                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                        for="inventory-list">
+                        {% for key,value in app.session.get('inventories') %}
+                            <li class="mdl-menu__item switch-inventory" id="{{ key }}">{{ value }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if auth.checkPermission('can_manage') %}
+                        <button id="create-inventory" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">CREATE INVENTORY</button>
+
+                        <button id="admin-menu-lower-left" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                            <i class="material-icons">settings</i>
+                        </button>
+                    {% endif %}
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white" id="welcome-name"><i class="material-icons">home</i>{{ user.getName  }}</button>
+                    <button id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Sign-out</button>
+                {% else %}
+                    <button id="login" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                        <i class="material-icons">account_circle</i>Sign-in with Google
+                    </button>
+                {% endif %}
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="inventory-content mdl-layout__content">
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <input type="hidden" id="notice" value="1">
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <input type="hidden" id="error" value="{{ flashMessage }}">
+        {% endfor %}
+
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+
+        <footer class="inventory-footer mdl-mega-footer">
+          <div class="mdl-mega-footer--top-section">
+            <div class="mdl-mega-footer--left-section">
+            </div>
+          </div>
+
+          <div class="mdl-mega-footer--middle-section">
+            <p class="mdl-typography--font-light">inventorianne: © 2017 Coding Avenue</p>
+          </div>
+
+          <div class="mdl-mega-footer--bottom-section">
+            <a class="inventory-link mdl-typography--font-light" href="">Contact Us</a>&nbsp;&nbsp;
+            <a class="inventory-link mdl-typography--font-light" href="">Privacy Policy</a>
+          </div>
+
+        </footer>
+      </div>
+
+    </div>
+    <script src="{{ asset('plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
+    <script defer src="{{ asset('js/material.min.js') }}"></script>
+    <script defer src="{{ asset('js/sweetalert.min.js') }}"></script>
+    {% block javascriptfile %}{% endblock %}
+    <script>
+        {% block javascript %}{% endblock %}
+
+        $(document).ready(function() {
+            $('.logo-header').click(function (){
+                window.location.href = "/";
+            });
+        
+            $('#login').click(function() {
+                window.location.href = "/login";
+            });
+        
+            $('#sign-out').click(function() {
+                window.location.href = "/logout";
+            });
+
+            $('#welcome-name').click(function() {
+                window.location.href = "/inventory";
+            });
+
+            $('#create-inventory').click(function() {
+                window.location.href = "/setup";
+            });
+        
+            $('#admin-menu-lower-left').click(function() {
+                window.location.href = "/management";
+            });
+        
+            $('#back').click(function() {
+                {%  if app.request.attributes.get('_route') != 'inventory' %}
+                    url = "{{ app.request.headers.get('referer') }}"; 
+
+                    window.location.href = url;
+                {% endif %}
+            });
+        
+            if ($('#notice').val()) {
+                sweetAlert("Success!", "Process successful!", "success")
+            }
+
+            if ($('#error').val()) {
+                sweetAlert({
+                    title: "Sorry, We have found some errors:",
+                    text: $('#error') .val(),
+                    type: "warning",
+                    showCancelButton: false,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Close",
+                    closeOnConfirm: false
+                });
+            }
+
+            $('.switch-inventory').on('click', function () {
+                window.location.href = '/inventory/switch?id=' + $(this).attr('id');
+            });
+        });
+    </script>
+  </body>
 </html>
