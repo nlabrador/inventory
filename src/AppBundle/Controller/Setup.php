@@ -99,7 +99,9 @@ class Setup extends Controller
                     $session_inventories[$table_name] = $request->request->get('table');
                 }
                 else {
-                    $session_inventories = [];
+                    $session_inventories = [
+                        $table_name => $request->request->get('table')
+                    ];
                 }
 
                 $this->get('session')->set('inventories', $session_inventories);

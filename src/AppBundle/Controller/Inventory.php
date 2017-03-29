@@ -59,7 +59,10 @@ class Inventory extends Controller
                     $result[$inventory->$get_id()] = $getters;
                 }
             
-                $headers = isset($inventories[0]) ? $dyobject->displayHeaders($inventories[0]) : [];
+                $inventory_class = 'AppBundle\Entity\\'.$class;
+                $inventory       = new $inventory_class();
+                $headers         = $dyobject->displayHeaders($inventory);
+
                 return $this->render('inventory/index.html.twig', [
                     'user' => $user,
                     'auth' => $auth,
