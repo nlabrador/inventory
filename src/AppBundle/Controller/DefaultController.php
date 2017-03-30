@@ -99,6 +99,10 @@ class DefaultController extends Controller
 
                     $inventories = $parameters['parameters']['inventories'];
 
+                    if (count($inventories) == 0) {
+                        return $this->redirectToRoute("setup");
+                    }
+                    
                     $this->get('session')->set('inventories', $inventories);
     
                     if (count($inventories) > 1) {
