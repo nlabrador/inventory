@@ -13,7 +13,7 @@
 
 {% block javascript %}
     $(document).ready(function() {
-        $('#item-list').dataTable({
+        table = $('#item-list').DataTable({
             "bPaginate": true,
             "bLengthChange": false,
             "bFilter": true,
@@ -25,6 +25,21 @@
                 { 'bSortable': false, 'aTargets': [ {{ nosort }} ] }
             ]
         });
+
+        $('#item-list tfoot th').each( function (i) {
+            var title = $('#item-list thead th').eq( $(this).index() ).text();
+
+            if (title) {
+                $(this).html( '<input class="field-search" type="text" placeholder="Search '+title+'" data-index="'+i+'" />' );
+            }
+        } );
+
+        $('#item-list').on( 'keyup', 'tfoot input', function () {
+            table
+                .column( $(this).data('index') )
+                .search( $(this).val() )
+                .draw();
+        } );
         
         $("#filter_date").select2({ width: '170px' });
 
@@ -94,6 +109,16 @@
                     </tr>
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    {% for header in headers %}
+                        <th class="mdl-data-table__cell--non-numeric"></th>
+                    {% endfor %}
+                    {% if headers|length > 0 %}
+                        <th></th>
+                    {% endif %}
+                </tr>
+            </tfoot>
             </table>
         </div>
     </div>

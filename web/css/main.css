@@ -38,3 +38,9 @@ a {
 .confirm {
     background-color: rgb(233,30,99) !important;
 }
+
+.field-search {
+    height: 25px;
+    width: 100%;
+    font-size: 12px;
+}
