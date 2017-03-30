@@ -154,6 +154,7 @@ class Inventory extends Controller
                 'form'   => $form->createView(),
                 'errors' => $errors,
                 'auth'   => $auth,
+                'update' => false,
                 'action' => $this->generateUrl('inventorycreate')
             ]);
         }
@@ -214,19 +215,55 @@ class Inventory extends Controller
             $inventory = $this->getDoctrine()
                                 ->getRepository('AppBundle:'.$class)
                                 ->find($id);
-                                //TODO here.....
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($inventory);
-            $em->flush();
-            
-            
-            $this->addFlash(
-                'notice',
-                'Item successfully updated.'
-            );
+            $dyobject  = new DyObject($this->getDoctrine());
 
-            return $this->redirectToRoute("index");
+            $fields  = $dyobject->getFields($inventory);
+            $getters = $dyobject->getters($inventory, true);
+
+            $form = $this->createForm(CreateInventory::class, ['fields' => $fields, 'inventory' => $inventory, 'getters' => $getters]);
+            $errors = [];
+
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $setters = $dyobject->setters($inventory);
+                $params  = $request->request->keys();
+
+                array_pop($params);
+
+                foreach ($params as $index => $key) {
+                    $setter = $setters[$index];
+                    $value  = $request->request->get($key);
+                    $field  = $fields[$index][0];
+
+                    if ($value && $field->type == 'date') {
+                        $value = date_create_from_format('Y-m-d', $value);
+                    }
+
+                    $inventory->$setter($value);
+                }
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($inventory);
+                $em->flush();
+
+                $this->addFlash(
+                    'notice',
+                    'Item successfully added.'
+                );
+
+                return $this->redirectToRoute("index");
+            }
+
+            return $this->render('inventory/create.html.twig', [
+                'user'   => $user,
+                'form'   => $form->createView(),
+                'errors' => $errors,
+                'auth'   => $auth,
+                'update' => true,
+                'action' => $this->generateUrl('updateitem', ['id' => $id])
+            ]);
         }
         else {
             return $this->redirectToRoute("index");

@@ -17,10 +17,21 @@ class CreateInventory extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $now = new \DateTime();
+        $inventory = isset($options['data']['inventory']) ? $options['data']['inventory'] : null;
+        $getters   = isset($options['data']['getters']) ? $options['data']['getters'] : null;
 
-        foreach ($options['data']['fields'] as $field) {
+        foreach ($options['data']['fields'] as $key => $field) {
             $field = $field[0];
             $label = ucfirst($field->name);
+            $value = '';
+
+            if ($inventory && $getters) {
+                $getter = isset($getters[$key]) ? $getters[$key]->name : null;
+
+                if ($getter) {
+                    $value = $inventory->$getter();
+                }
+            }
 
             if (!preg_match('/_id/', $field->name)) {
                 $class = 'form-control input-md';
@@ -28,6 +39,10 @@ class CreateInventory extends AbstractType
                 if ($field->type == 'date') {
                     $label .= ' (yyyy-mm-dd)';
                     $class .= ' datefield';
+
+                    if ($value) {
+                        $value = $value->format('Y-m-d');
+                    }
                 }
                 elseif ($field->type == 'decimal') {
                     $label .= ' (100.00)';
@@ -43,7 +58,8 @@ class CreateInventory extends AbstractType
                     ->add($field->name, TextType::class, [
                         'attr'    => [
                             'class'       => $class,
-                            'placeholder' => $label
+                            'placeholder' => $label,
+                            'value'       => $value
                         ]
                 ]);
             }

@@ -38,12 +38,18 @@ class DyObject
         return $mapped_fields;
     }
 
-    public function getters($entity) {
+    public function getters($entity, $skipid = false) {
         $object = new \ReflectionObject($entity);
         
         $getters = [];
 
         foreach ($object->getMethods() as $method) {
+            if ($skipid) {
+                if (preg_match('/Id/', $method->name)) {
+                    continue;
+                }
+            }
+
             if (preg_match('/^get/', $method->name)) {
                 $getters[] = $method;
             }

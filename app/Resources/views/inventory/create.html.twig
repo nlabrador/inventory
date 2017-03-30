@@ -26,7 +26,11 @@
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--3-col"></div>
     <div class="mdl-cell mdl-cell--6-col">
-    <h4>Add New Item</h4>
+    {% if update %}
+        <h4>Update Item</h4>
+    {% else %}
+        <h4>Add New Item</h4>
+    {% endif %}
         {% if errors %}
         <div class="alert alert-danger">
             <h4>Form submitted has the following errors:</h4>
@@ -50,7 +54,7 @@
                                         <td>
                                             {% if row.vars.attr.class matches '/input/' %}
                                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                                    <input class="mdl-textfield__input {{ row.vars.attr.class }}" type="text" name="{{ row.vars.id }}">
+                                                    <input class="mdl-textfield__input {{ row.vars.attr.class }}" type="text" name="{{ row.vars.id }}" value="{{ row.vars.attr.value }}">
                                                     <label class="mdl-textfield__label">{{ row.vars.attr.placeholder }}</label>
                                                 </div>
                                             {% else %}
