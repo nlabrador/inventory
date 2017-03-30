@@ -97,9 +97,18 @@ class DefaultController extends Controller
                     $config = new Config($this->container->get('kernel')->getRootDir() . '/config/parameters.yml');
                     $parameters = $config->parseConfig();
 
-                    $this->get('session')->set('inventories', $parameters['parameters']['inventories']);
+                    $inventories = $parameters['parameters']['inventories'];
 
-                    return $this->redirectToRoute("inventory");
+                    $this->get('session')->set('inventories', $inventories);
+    
+                    if (count($inventories) > 1) {
+                        return $this->redirectToRoute("inventorychoose");
+                    }
+                    else {
+                        $this->get('session')->set('inventory', key($inventories));
+                        
+                        return $this->redirectToRoute("index");
+                    }
                 }
                 else {
                     return $this->redirectToRoute("index");

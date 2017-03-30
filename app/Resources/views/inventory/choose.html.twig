@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block css %}
+{% endblock %}
+
+{% block javascriptfile %}
+{% endblock %}
+
+{% block javascript %}
+    $(document).ready(function() {
+        $('#getstarted').on('click', function() {
+            id = $('.inventory_name:checked').val();
+
+            window.location.href = '/inventory/switch?id=' + id;
+        });
+    });
+{% endblock %}
+
+{% block body %}
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--3-col"></div>
+    <div class="mdl-cell mdl-cell--6-col">
+        <h3>List of Inventories</h3>
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Choose Inventory</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <table class="mdl-data-table" width=100%"">
+                {% for key,value in inventories %}
+                <tr>
+                    <td width="2%"><input class="inventory_name" type="radio" name="inventory" value="{{ key }}" checked="checked"></td>
+                    <td style="text-align:left;">{{ value }}</td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a id="getstarted" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    SWITCH TO THIS INVENTORY
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="mdl-cell mdl-cell--3-col"></div>
+</div>
+{% endblock %}

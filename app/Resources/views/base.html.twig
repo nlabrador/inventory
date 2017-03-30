@@ -42,13 +42,6 @@
                         <button id="inventory-list" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">INVENTORIES</button>
                     {% endif %}
 
-                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                        for="inventory-list">
-                        {% for key,value in app.session.get('inventories') %}
-                            <li class="mdl-menu__item switch-inventory" id="{{ key }}">{{ value }}</li>
-                        {% endfor %}
-                    </ul>
-
                     {% if auth.checkPermission('can_manage') %}
                         <button id="create-inventory" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">CREATE INVENTORY</button>
 
@@ -128,6 +121,10 @@
             $('#admin-menu-lower-left').click(function() {
                 window.location.href = "/management";
             });
+
+            $('#inventory-list').click(function() {
+                window.location.href = "/inventory/choose";
+            });
         
             $('#back').click(function() {
                 {%  if app.request.attributes.get('_route') != 'inventory' %}
@@ -152,10 +149,6 @@
                     closeOnConfirm: false
                 });
             }
-
-            $('.switch-inventory').on('click', function () {
-                window.location.href = '/inventory/switch?id=' + $(this).attr('id');
-            });
         });
     </script>
   </body>

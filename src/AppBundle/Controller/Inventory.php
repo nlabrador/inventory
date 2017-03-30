@@ -81,6 +81,27 @@ class Inventory extends Controller
     }
 
     /**
+     * @Route("/inventory/choose", name="inventorychoose")
+     */
+    public function inventorychooseAction(Request $request)
+    {
+        $user_model = new User($this->getDoctrine());
+        $user       = $user_model->findOneByEmailAddress($this->get('session')->get('email'));
+
+        $auth = new Authenticate($user, $this->getDoctrine());
+
+        if ($auth->checkPermission('can_view')) {
+            return $this->render('inventory/choose.html.twig', [
+                'user' => $user,
+                'auth' => $auth,
+                'inventories' => $this->get('session')->get('inventories')
+            ]);
+        }
+        
+        return $this->redirectToRoute("index");
+    }
+
+    /**
      * @Route("/inventory/switch", name="inventoryswitch")
      */
     public function inventoryswitchAction(Request $request)
