@@ -89,12 +89,17 @@ class Inventory extends Controller
         $user       = $user_model->findOneByEmailAddress($this->get('session')->get('email'));
 
         $auth = new Authenticate($user, $this->getDoctrine());
+        
+        $config = new Config($this->container->get('kernel')->getRootDir() . '/config/parameters.yml');
+        $parameters = $config->parseConfig();
+
+        $inventories = $parameters['parameters']['inventories'];
 
         if ($auth->checkPermission('can_view')) {
             return $this->render('inventory/choose.html.twig', [
                 'user' => $user,
                 'auth' => $auth,
-                'inventories' => $this->get('session')->get('inventories')
+                'inventories' => $inventories
             ]);
         }
         
