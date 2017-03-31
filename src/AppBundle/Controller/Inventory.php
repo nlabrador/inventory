@@ -13,6 +13,7 @@ use AppBundle\Entity\Users;
 use AppBundle\Entity\UserPermissions;
 
 use AppBundle\Util\Authenticate;
+use AppBundle\Util\Config;
 use AppBundle\Form\UserManagement;
 use AppBundle\Form\CreateInventory;
 use AppBundle\Model\DyObject;
