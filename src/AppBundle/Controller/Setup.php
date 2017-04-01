@@ -105,6 +105,7 @@ class Setup extends Controller
                 }
 
                 $this->get('session')->set('inventories', $session_inventories);
+                $this->get('session')->set('inventory', $table_name);
 
                 return new JsonResponse('success');
             }
