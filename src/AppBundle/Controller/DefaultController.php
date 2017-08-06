@@ -57,7 +57,7 @@ class DefaultController extends Controller
      */
     public function oauth2callbackAction(Request $request) {
         $client = new Google_Client();
-        $client->setAuthConfigFile('/etc/hiredevs_client_secrets.json');
+        $client->setAuthConfigFile('/etc/inventorianne_client.json');
         $client->setScopes(array(
             Google_Service_Oauth2::USERINFO_PROFILE,
             Google_Service_Oauth2::USERINFO_EMAIL,
